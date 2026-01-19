@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { db } from "@/db";
 import { profiles } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import DeleteProfileButton from "@/components/DeleteProfileButton";
 
 export const dynamic = "force-dynamic";
 
@@ -132,13 +133,17 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                                 </div>
                             )}
                         </div>
-                        <div className="flex items-start">
+                        <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
                             <Link
                                 href={`/profile/${profile.id}/edit`}
                                 className="button-secondary"
                             >
                                 Edit Profile
                             </Link>
+                            <DeleteProfileButton
+                                profileId={profile.id}
+                                profileName={profile.name}
+                            />
                         </div>
                     </div>
                 </header>

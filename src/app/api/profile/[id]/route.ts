@@ -62,3 +62,25 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         return jsonError("Internal server error", 500);
     }
 }
+
+// DELETE /api/profile/:id - Delete a profile by id
+export async function DELETE(_request: NextRequest, { params }: RouteParams) {
+    try {
+        const { id } = await params;
+
+        const existing = await db.query.profiles.findFirst({
+            where: eq(profiles.id, id),
+        });
+
+        if (!existing) {
+            return jsonError("Profile not found", 404);
+        }
+
+        await db.delete(profiles).where(eq(profiles.id, id));
+
+        return jsonSuccess({ success: true });
+    } catch (error) {
+        console.error("DELETE /api/profile/:id error:", error);
+        return jsonError("Internal server error", 500);
+    }
+}
