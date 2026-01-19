@@ -1,6 +1,6 @@
-# Candidate Profile Playground
+# Talent Directory
 
-A minimal, production-ready application that stores a candidate profile in PostgreSQL (NeonDB) and exposes it via a REST-style API using Next.js App Router, along with a basic frontend UI.
+A modern, production-ready directory application that stores candidate profiles in PostgreSQL (NeonDB) and exposes them via a REST-style API using Next.js App Router. Features a beautiful glassmorphism UI with smooth animations.
 
 ## 🎯 Live Demo
 
@@ -13,9 +13,10 @@ A minimal, production-ready application that stores a candidate profile in Postg
 
 This project demonstrates a full-stack application with:
 
+- **Directory System**: Support for multiple user profiles
 - **Backend**: RESTful API routes implemented with Next.js App Router
 - **Database**: PostgreSQL on NeonDB with Drizzle ORM
-- **Frontend**: Server-rendered pages fetching data via the hosted API
+- **Frontend**: Server-rendered pages with dedicated Add/Edit profile screens
 - **Deployment**: Vercel with environment-based configuration
 
 ### Architecture
@@ -27,11 +28,14 @@ This project demonstrates a full-stack application with:
 │  │                  Next.js App Router                     ││
 │  │  ┌────────────────┐    ┌─────────────────────────────┐  ││
 │  │  │  Frontend      │    │   API Routes                │  ││
-│  │  │  Pages         │───▶│   /api/profile              │  ││
-│  │  │  /, /projects  │    │   /api/projects             │  ││
-│  │  │  /search       │    │   /api/skills/top           │  ││
-│  │  └────────────────┘    │   /api/search               │  ││
-│  │                        │   /api/health               │  ││
+│  │  │  Pages         │───▶│   /api/profile (GET/POST)   │  ││
+│  │  │  /             │    │   /api/projects             │  ││
+│  │  │  /profile/[id] │    │   /api/skills/top           │  ││
+│  │  │  /profile/new  │    │   /api/profile/:id (PUT)    │  ││
+│  │  │  /profile/[id]/edit │                             │  ││
+│  │  │  /projects     │    │   /api/search               │  ││
+│  │  │  /search       │    │   /api/health               │  ││
+│  │  └────────────────┘    │                             │  ││
 │  │                        └─────────────────────────────┘  ││
 │  └─────────────────────────────────────────────────────────┘│
 │                              │                              │
@@ -60,7 +64,7 @@ This project demonstrates a full-stack application with:
 | **Drizzle ORM** | Database toolkit      | Type-safe, lightweight, SQL-like syntax, excellent migration support   |
 | **NeonDB**      | Serverless PostgreSQL | Instant provisioning, auto-scaling, perfect for serverless deployments |
 | **Zod**         | Input validation      | Runtime type validation with TypeScript inference                      |
-| **Tailwind**    | Styling               | Utility-first CSS, minimal bundle size, rapid development              |
+| **Tailwind**    | Styling               | Utility-first CSS, configured for custom Glassmorphism design system   |
 | **Vercel**      | Hosting               | Native Next.js support, edge functions, automatic deployments          |
 
 ---
@@ -112,45 +116,6 @@ This project demonstrates a full-stack application with:
 | created_at | TIMESTAMPTZ | Creation timestamp               |
 | updated_at | TIMESTAMPTZ | Last update timestamp            |
 
-### JSONB Field Structures
-
-```typescript
-// education (JSONB array)
-[{
-  school: "Stanford University",
-  degree: "M.S.",
-  area: "Computer Science",
-  startYear: "2020",
-  endYear: "2022"
-}]
-
-// links on profile (JSONB object)
-{
-  github: "https://github.com/...",
-  linkedin: "https://linkedin.com/in/...",
-  portfolio: "https://..."
-}
-
-// links on projects (JSONB object)
-{
-  repo: "https://github.com/...",
-  demo: "https://...",
-  docs: "https://..."
-}
-
-// highlights on work (JSONB array)
-[{ bullet: "Led team of 5 engineers..." }]
-```
-
-### Indexes
-
-- `profiles_email_idx` - Unique email lookup
-- `projects_profile_idx` - FK relationship
-- `projects_skills_idx` - GIN index for skill filtering
-- `projects_title_idx` - Project title search
-- `work_profile_idx` - FK relationship
-- `work_company_idx` - Company search
-
 ---
 
 ## 🛠️ Local Setup
@@ -180,7 +145,6 @@ Create `.env` file:
 
 ```env
 DATABASE_URL="postgres://username:password@host.neon.tech/dbname?sslmode=require"
-BASIC_AUTH_TOKEN="your-secure-token"
 NEXT_PUBLIC_SITE_URL="http://localhost:3000"
 ```
 
@@ -206,29 +170,6 @@ Visit [http://localhost:3000](http://localhost:3000)
 
 ---
 
-## 🚀 Production Deployment
-
-### Deploy to Vercel
-
-1. Push code to GitHub
-2. Import project in [Vercel Dashboard](https://vercel.com/new)
-3. Add environment variables:
-    - `DATABASE_URL` - Your NeonDB production connection string
-    - `BASIC_AUTH_TOKEN` - Secure token for write operations
-    - `NEXT_PUBLIC_SITE_URL` - Your production URL (e.g., https://your-app.vercel.app)
-4. Deploy
-
-### Post-Deployment
-
-Run migrations against production database:
-
-```bash
-DATABASE_URL="your-production-url" npm run db:push
-DATABASE_URL="your-production-url" npm run db:seed
-```
-
----
-
 ## 📡 API Reference
 
 ### Health Check
@@ -237,17 +178,7 @@ DATABASE_URL="your-production-url" npm run db:seed
 curl https://your-app.vercel.app/api/health
 ```
 
-Response:
-
-```json
-{
-    "status": "ok",
-    "timestamp": "2026-01-19T10:00:00.000Z",
-    "version": "1.0.0"
-}
-```
-
-### Get Profile
+### Get All Profiles
 
 ```bash
 curl https://your-app.vercel.app/api/profile
@@ -255,10 +186,9 @@ curl https://your-app.vercel.app/api/profile
 
 ### Create Profile
 
-```bash
+````bash
 curl -X POST https://your-app.vercel.app/api/profile \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer your-token" \
   -d '{
     "name": "John Doe",
     "email": "john@example.com",
@@ -269,33 +199,21 @@ curl -X POST https://your-app.vercel.app/api/profile \
     "projects": [{"title": "Project X", "description": "...", "skills": ["Go"]}],
     "work": [{"role": "Engineer", "company": "ACME", "startDate": "2020-01"}]
   }'
-```
 
 ### Update Profile
 
 ```bash
-curl -X PUT https://your-app.vercel.app/api/profile \
+curl -X PUT https://your-app.vercel.app/api/profile/<profile-id> \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer your-token" \
-  -d '{"name": "Jane Doe", "skills": ["Python", "Go", "Rust"]}'
-```
+  -d '{
+    "name": "Jane Doe",
+    "email": "jane@example.com",
+    "summary": "Updated summary",
+    "skills": ["TypeScript", "React", "Node.js"],
+    "links": {"github": "https://github.com/janedoe"}
+  }'
+````
 
-### Filter Projects by Skill
-
-```bash
-curl "https://your-app.vercel.app/api/projects?skill=python"
-```
-
-### Get Top Skills
-
-```bash
-curl https://your-app.vercel.app/api/skills/top
-```
-
-### Search
-
-```bash
-curl "https://your-app.vercel.app/api/search?q=typescript"
 ```
 
 ---
@@ -303,69 +221,61 @@ curl "https://your-app.vercel.app/api/search?q=typescript"
 ## 📁 Project Structure
 
 ```
-├── drizzle/                  # Generated SQL migrations
-│   └── 0000_*.sql
+
+├── drizzle/ # Generated SQL migrations
 ├── src/
-│   ├── app/
-│   │   ├── api/
-│   │   │   ├── health/route.ts
-│   │   │   ├── profile/route.ts
-│   │   │   ├── projects/route.ts
-│   │   │   ├── search/route.ts
-│   │   │   └── skills/top/route.ts
-│   │   ├── projects/page.tsx
-│   │   ├── search/page.tsx
-│   │   ├── globals.css
-│   │   ├── layout.tsx
-│   │   └── page.tsx
-│   ├── db/
-│   │   ├── index.ts          # Database client
-│   │   ├── schema.ts         # Drizzle schema
-│   │   └── seed.ts           # Seed script
-│   └── lib/
-│       ├── api-client.ts     # Frontend API client
-│       ├── api-utils.ts      # API helpers (auth, responses)
-│       └── validators.ts     # Zod schemas
-├── drizzle.config.ts
+│ ├── app/
+│ │ ├── api/ # API Routes
+│ │ ├── profile/[id]/ # Profile Details Page
+│ │ ├── profile/[id]/edit # Edit Profile Page
+│ │ ├── profile/new/ # New Profile Page
+│ │ ├── projects/ # Projects Discovery
+│ │ ├── search/ # Search Page
+│ │ ├── globals.css # Tailwind & Theme Variables
+│ │ ├── layout.tsx # Root Layout
+│ │ └── page.tsx # Home (Directory)
+│ ├── components/
+│ │ ├── AddProfileButton.tsx # Link to create page
+│ │ ├── AddProfileForm.tsx # Add profile form
+│ │ ├── EditProfileForm.tsx # Edit profile form
+│ │ ├── HealthCheckModal.tsx # API Status popup
+│ ├── db/
+│ │ ├── index.ts # Database client
+│ │ ├── schema.ts # Drizzle schema
+│ │ └── seed.ts # Seed script
+│ └── lib/
+│ ├── api-client.ts # Frontend API client
+│ └── validators.ts # Zod schemas
 ├── package.json
-├── tsconfig.json
 └── README.md
+
 ```
 
 ---
 
-## ⚠️ Known Limitations
+## ⚠️ Limitations & Notes
 
-1. **Single Profile**: The app is designed for a single candidate profile. Multi-tenant support would require additional routing/authentication.
-
-2. **Basic Auth**: Write endpoints use simple Bearer token auth. For production, consider OAuth or JWT.
-
-3. **No Pagination**: API endpoints return all results. Large datasets would need cursor-based pagination.
-
-4. **No Caching**: Data is fetched fresh on each request. Consider adding Redis or Next.js ISR for frequently accessed data.
-
-5. **No Rate Limiting**: API endpoints have no rate limiting. Add middleware like `@upstash/ratelimit` for production.
-
-6. **Client-Side Search**: The search page uses client-side state. For better SEO, consider server-side rendering with URL params.
+1. **Public Creation**: Currently, anyone can add or edit a profile. There is no authentication required for the `POST`/`PUT` endpoints.
+2. **No Delete**: Profiles can be created and edited, but not deleted via the UI in this version.
+3. **Pagination**: The directory page fetches all profiles. Pagination would be needed for production scaling.
+4. **Client Search**: The search uses a combination of API filtering and client-side state.
 
 ---
 
-## ✨ Bonus Features Implemented
+## ✨ Features Implemented
 
-- ✅ **Input Validation**: Zod schemas for all API inputs
-- ✅ **Basic Auth**: Bearer token protection for write endpoints
-- ✅ **TypeScript**: Full type safety across the codebase
-- ✅ **Indexes**: GIN index on skills array for efficient filtering
-- ✅ **Error Handling**: Consistent JSON error responses
-
----
-
-## 📄 Resume
-
-[Link to Resume (PDF)](https://your-resume-link.com) _(Update with actual link)_
+- ✅ **Multi-Profile Directory**: Support for unlimited profiles.
+- ✅ **Glassmorphism UI**: Custom design with blurs, gradients, and translucency.
+- ✅ **Animations**: Fluid entrance animations (`fade-up`, `float`).
+- ✅ **Dedicated Add/Edit Pages**: Full-page create and edit forms (no modals).
+- ✅ **Input Validation**: Zod schemas for all API inputs.
+- ✅ **Indexing**: Postgres GIN indexes on JSONB and Array columns for fast filtering.
+- ✅ **Health Monitoring**: Built-in API status check modal.
+- ✅ **Full TypeScript**: End-to-end type safety.
 
 ---
 
 ## 📜 License
 
 MIT
+```

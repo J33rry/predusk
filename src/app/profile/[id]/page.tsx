@@ -60,86 +60,97 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
     }
 
     return (
-        <main className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto">
+        <main className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 page-shell">
+            <div className="max-w-5xl mx-auto">
                 {/* Navigation */}
-                <nav className="flex gap-6 mb-12 text-sm font-medium">
-                    <Link
-                        href="/"
-                        className="text-gray-600 hover:text-gray-900"
-                    >
+                <nav className="flex flex-wrap gap-3 mb-10 text-sm font-medium">
+                    <Link href="/" className="nav-pill">
                         ← Back to Profiles
                     </Link>
-                    <Link
-                        href="/projects"
-                        className="text-gray-600 hover:text-gray-900"
-                    >
+                    <Link href="/projects" className="nav-pill">
                         Projects
                     </Link>
-                    <Link
-                        href="/search"
-                        className="text-gray-600 hover:text-gray-900"
-                    >
+                    <Link href="/search" className="nav-pill">
                         Search
                     </Link>
                 </nav>
 
                 {/* Header */}
-                <header className="mb-12">
-                    <h1 className="text-4xl font-bold mb-2">{profile.name}</h1>
-                    <p className="text-gray-600 mb-4">{profile.email}</p>
-                    {profile.summary && (
-                        <p className="text-lg text-gray-700 leading-relaxed">
-                            {profile.summary}
-                        </p>
-                    )}
+                <header className="mb-12 glass-card rounded-2xl p-6 md:p-8 animate-fade-up">
+                    <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+                        <div>
+                            <p className="badge-soft mb-3 inline-flex">
+                                Profile
+                            </p>
+                            <h1 className="text-3xl md:text-4xl font-bold mb-2 section-title">
+                                <span className="gradient-text">
+                                    {profile.name}
+                                </span>
+                            </h1>
+                            <p className="text-slate-700 mb-4">
+                                {profile.email}
+                            </p>
+                            {profile.summary && (
+                                <p className="text-lg text-slate-800 leading-relaxed">
+                                    {profile.summary}
+                                </p>
+                            )}
 
-                    {/* Links */}
-                    {profile.links && (
-                        <div className="flex gap-4 mt-4">
-                            {profile.links.github && (
-                                <a
-                                    href={profile.links.github}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-blue-600 hover:underline"
-                                >
-                                    GitHub
-                                </a>
-                            )}
-                            {profile.links.linkedin && (
-                                <a
-                                    href={profile.links.linkedin}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-blue-600 hover:underline"
-                                >
-                                    LinkedIn
-                                </a>
-                            )}
-                            {profile.links.portfolio && (
-                                <a
-                                    href={profile.links.portfolio}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-blue-600 hover:underline"
-                                >
-                                    Portfolio
-                                </a>
+                            {/* Links */}
+                            {profile.links && (
+                                <div className="flex gap-4 mt-4">
+                                    {profile.links.github && (
+                                        <a
+                                            href={profile.links.github}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-indigo-600 hover:text-indigo-800 hover:underline font-medium"
+                                        >
+                                            GitHub
+                                        </a>
+                                    )}
+                                    {profile.links.linkedin && (
+                                        <a
+                                            href={profile.links.linkedin}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-indigo-600 hover:text-indigo-800 hover:underline font-medium"
+                                        >
+                                            LinkedIn
+                                        </a>
+                                    )}
+                                    {profile.links.portfolio && (
+                                        <a
+                                            href={profile.links.portfolio}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-indigo-600 hover:text-indigo-800 hover:underline font-medium"
+                                        >
+                                            Portfolio
+                                        </a>
+                                    )}
+                                </div>
                             )}
                         </div>
-                    )}
+                        <div className="flex items-start">
+                            <Link
+                                href={`/profile/${profile.id}/edit`}
+                                className="button-secondary"
+                            >
+                                Edit Profile
+                            </Link>
+                        </div>
+                    </div>
                 </header>
 
                 {/* Skills */}
-                <section className="mb-12">
-                    <h2 className="text-2xl font-semibold mb-4">Skills</h2>
+                <section className="mb-12 glass-card rounded-2xl p-6 md:p-8 animate-fade-up">
+                    <h2 className="text-2xl font-semibold mb-4 section-title">
+                        Skills
+                    </h2>
                     <div className="flex flex-wrap gap-2">
                         {profile.skills.map((skill) => (
-                            <span
-                                key={skill}
-                                className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
-                            >
+                            <span key={skill} className="badge-soft">
                                 {skill}
                             </span>
                         ))}
@@ -148,27 +159,27 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 
                 {/* Education */}
                 {profile.education.length > 0 && (
-                    <section className="mb-12">
-                        <h2 className="text-2xl font-semibold mb-4">
+                    <section className="mb-12 glass-card rounded-2xl p-6 md:p-8 animate-fade-up">
+                        <h2 className="text-2xl font-semibold mb-4 section-title">
                             Education
                         </h2>
                         <div className="space-y-4">
                             {profile.education.map((edu, i) => (
                                 <div
                                     key={i}
-                                    className="border-l-4 border-blue-500 pl-4"
+                                    className="border-l-4 border-indigo-400 pl-4"
                                 >
                                     <h3 className="font-semibold">
                                         {edu.school}
                                     </h3>
                                     {(edu.degree || edu.area) && (
-                                        <p className="text-gray-600">
+                                        <p className="text-slate-700">
                                             {edu.degree}{" "}
                                             {edu.area && `in ${edu.area}`}
                                         </p>
                                     )}
                                     {(edu.startYear || edu.endYear) && (
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-sm text-slate-600">
                                             {edu.startYear} -{" "}
                                             {edu.endYear || "Present"}
                                         </p>
@@ -181,34 +192,34 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 
                 {/* Work Experience */}
                 {profile.work.length > 0 && (
-                    <section className="mb-12">
-                        <h2 className="text-2xl font-semibold mb-4">
+                    <section className="mb-12 glass-card rounded-2xl p-6 md:p-8 animate-fade-up">
+                        <h2 className="text-2xl font-semibold mb-4 section-title">
                             Experience
                         </h2>
                         <div className="space-y-6">
                             {profile.work.map((work) => (
                                 <div
                                     key={work.id}
-                                    className="border-l-4 border-green-500 pl-4"
+                                    className="border-l-4 border-purple-400 pl-4"
                                 >
                                     <h3 className="font-semibold">
                                         {work.role}
                                     </h3>
-                                    <p className="text-gray-600">
+                                    <p className="text-slate-700">
                                         {work.company}
                                         {work.location && ` • ${work.location}`}
                                     </p>
-                                    <p className="text-sm text-gray-500">
+                                    <p className="text-sm text-slate-600">
                                         {work.startDate} -{" "}
                                         {work.endDate || "Present"}
                                     </p>
                                     {work.summary && (
-                                        <p className="mt-2 text-gray-700">
+                                        <p className="mt-2 text-slate-800">
                                             {work.summary}
                                         </p>
                                     )}
                                     {work.highlights.length > 0 && (
-                                        <ul className="mt-2 list-disc list-inside text-gray-600 text-sm">
+                                        <ul className="mt-2 list-disc list-inside text-slate-700 text-sm">
                                             {work.highlights.map(
                                                 (
                                                     h: { bullet: string },
@@ -227,28 +238,25 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 
                 {/* Projects */}
                 {profile.projects.length > 0 && (
-                    <section className="mb-12">
-                        <h2 className="text-2xl font-semibold mb-4">
+                    <section className="mb-12 glass-card rounded-2xl p-6 md:p-8 animate-fade-up">
+                        <h2 className="text-2xl font-semibold mb-4 section-title">
                             Projects
                         </h2>
                         <div className="grid gap-4 md:grid-cols-2">
                             {profile.projects.map((project) => (
                                 <div
                                     key={project.id}
-                                    className="p-4 border rounded-lg hover:shadow-md transition-shadow"
+                                    className="p-4 rounded-xl bg-white/80 card-hover"
                                 >
                                     <h3 className="font-semibold mb-2">
                                         {project.title}
                                     </h3>
-                                    <p className="text-sm text-gray-600 mb-3">
+                                    <p className="text-sm text-slate-700 mb-3">
                                         {project.description}
                                     </p>
                                     <div className="flex flex-wrap gap-1 mb-3">
                                         {project.skills.map((skill) => (
-                                            <span
-                                                key={skill}
-                                                className="px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-xs"
-                                            >
+                                            <span key={skill} className="chip">
                                                 {skill}
                                             </span>
                                         ))}
@@ -260,7 +268,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                                                     href={project.links.repo}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="text-blue-600 hover:underline"
+                                                    className="text-indigo-600 hover:text-indigo-800 hover:underline font-medium"
                                                 >
                                                     Repo
                                                 </a>
@@ -270,7 +278,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                                                     href={project.links.demo}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="text-blue-600 hover:underline"
+                                                    className="text-indigo-600 hover:text-indigo-800 hover:underline font-medium"
                                                 >
                                                     Demo
                                                 </a>
@@ -280,7 +288,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                                                     href={project.links.docs}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="text-blue-600 hover:underline"
+                                                    className="text-indigo-600 hover:text-indigo-800 hover:underline font-medium"
                                                 >
                                                     Docs
                                                 </a>
@@ -294,12 +302,12 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                 )}
 
                 {/* Footer */}
-                <footer className="text-center text-sm text-gray-500 pt-8 border-t">
+                <footer className="text-center text-sm text-gray-500 pt-10 border-t border-slate-200/60">
                     <p>
                         Built with Next.js, Drizzle ORM, and NeonDB •{" "}
                         <Link
                             href="/"
-                            className="text-blue-600 hover:underline"
+                            className="text-indigo-600 hover:text-indigo-800 hover:underline font-medium"
                         >
                             View all profiles
                         </Link>

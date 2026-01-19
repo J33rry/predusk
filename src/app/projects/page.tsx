@@ -19,34 +19,30 @@ export default async function ProjectsPage({
     ]);
 
     return (
-        <main className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto">
+        <main className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 page-shell">
+            <div className="max-w-5xl mx-auto">
                 {/* Navigation */}
-                <nav className="flex gap-6 mb-12 text-sm font-medium">
-                    <Link
-                        href="/"
-                        className="text-gray-600 hover:text-gray-900"
-                    >
-                        Profile
+                <nav className="flex flex-wrap gap-3 mb-10 text-sm font-medium">
+                    <Link href="/" className="nav-pill">
+                        Profiles
                     </Link>
-                    <Link
-                        href="/projects"
-                        className="text-blue-600 border-b-2 border-blue-600 pb-1"
-                    >
+                    <Link href="/projects" className="nav-pill nav-pill-active">
                         Projects
                     </Link>
-                    <Link
-                        href="/search"
-                        className="text-gray-600 hover:text-gray-900"
-                    >
+                    <Link href="/search" className="nav-pill">
                         Search
                     </Link>
                 </nav>
 
                 {/* Header */}
-                <header className="mb-8">
-                    <h1 className="text-3xl font-bold mb-2">Projects</h1>
-                    <p className="text-gray-600">
+                <header className="mb-8 glass-card rounded-2xl p-6 md:p-8 animate-fade-up">
+                    <p className="badge-soft mb-3 inline-flex">
+                        Work Highlights
+                    </p>
+                    <h1 className="text-3xl md:text-4xl font-bold mb-2 section-title">
+                        <span className="gradient-text">Project Showcase</span>
+                    </h1>
+                    <p className="text-slate-700">
                         {skill
                             ? `Showing ${projectsData.count} project(s) with skill: "${skill}"`
                             : `Showing all ${projectsData.count} projects`}
@@ -54,18 +50,14 @@ export default async function ProjectsPage({
                 </header>
 
                 {/* Skill Filters */}
-                <section className="mb-8">
-                    <h2 className="text-sm font-medium text-gray-500 mb-3">
+                <section className="mb-8 glass-card rounded-2xl p-5 md:p-6 animate-fade-up">
+                    <h2 className="text-sm font-medium text-slate-600 mb-3">
                         Filter by skill:
                     </h2>
                     <div className="flex flex-wrap gap-2">
                         <Link
                             href="/projects"
-                            className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
-                                !skill
-                                    ? "bg-blue-600 text-white"
-                                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                            }`}
+                            className={`chip ${!skill ? "nav-pill-active" : ""}`}
                         >
                             All
                         </Link>
@@ -73,11 +65,11 @@ export default async function ProjectsPage({
                             <Link
                                 key={s.skill}
                                 href={`/projects?skill=${encodeURIComponent(s.skill)}`}
-                                className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                                className={`chip ${
                                     skill?.toLowerCase() ===
                                     s.skill.toLowerCase()
-                                        ? "bg-blue-600 text-white"
-                                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                        ? "nav-pill-active"
+                                        : ""
                                 }`}
                             >
                                 {s.skill}
@@ -92,14 +84,21 @@ export default async function ProjectsPage({
                         {projectsData.projects.map((project) => (
                             <article
                                 key={project.id}
-                                className="p-6 border rounded-lg hover:shadow-md transition-shadow"
+                                className="p-6 rounded-2xl glass-card card-hover animate-fade-up"
                             >
-                                <h2 className="text-xl font-semibold mb-2">
-                                    {project.title}
-                                </h2>
-                                <p className="text-gray-600 mb-4">
-                                    {project.description}
-                                </p>
+                                <div className="flex items-start justify-between gap-4">
+                                    <div>
+                                        <h2 className="text-xl font-semibold mb-2">
+                                            {project.title}
+                                        </h2>
+                                        <p className="text-slate-700 mb-4">
+                                            {project.description}
+                                        </p>
+                                    </div>
+                                    <span className="badge-soft">
+                                        Case Study
+                                    </span>
+                                </div>
 
                                 {/* Skills */}
                                 <div className="flex flex-wrap gap-2 mb-4">
@@ -107,7 +106,7 @@ export default async function ProjectsPage({
                                         <Link
                                             key={s}
                                             href={`/projects?skill=${encodeURIComponent(s)}`}
-                                            className="px-2 py-1 bg-blue-50 text-blue-700 rounded text-sm hover:bg-blue-100 transition-colors"
+                                            className="chip"
                                         >
                                             {s}
                                         </Link>
@@ -116,13 +115,13 @@ export default async function ProjectsPage({
 
                                 {/* Links */}
                                 {project.links && (
-                                    <div className="flex gap-4 text-sm">
+                                    <div className="flex flex-wrap gap-4 text-sm">
                                         {project.links.repo && (
                                             <a
                                                 href={project.links.repo}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="text-blue-600 hover:underline"
+                                                className="text-indigo-600 hover:text-indigo-800 hover:underline font-medium"
                                             >
                                                 Repository →
                                             </a>
@@ -132,7 +131,7 @@ export default async function ProjectsPage({
                                                 href={project.links.demo}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="text-blue-600 hover:underline"
+                                                className="text-indigo-600 hover:text-indigo-800 hover:underline font-medium"
                                             >
                                                 Live Demo →
                                             </a>
@@ -142,7 +141,7 @@ export default async function ProjectsPage({
                                                 href={project.links.docs}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="text-blue-600 hover:underline"
+                                                className="text-indigo-600 hover:text-indigo-800 hover:underline font-medium"
                                             >
                                                 Docs →
                                             </a>
@@ -153,13 +152,13 @@ export default async function ProjectsPage({
                         ))}
                     </section>
                 ) : (
-                    <div className="text-center py-12">
-                        <p className="text-gray-500">
+                    <div className="text-center py-12 glass-card rounded-2xl animate-fade-up">
+                        <p className="text-slate-700">
                             No projects found matching your criteria.
                         </p>
                         <Link
                             href="/projects"
-                            className="text-blue-600 hover:underline mt-2 inline-block"
+                            className="text-indigo-600 hover:text-indigo-800 hover:underline mt-2 inline-block font-medium"
                         >
                             View all projects
                         </Link>
@@ -167,12 +166,12 @@ export default async function ProjectsPage({
                 )}
 
                 {/* Footer */}
-                <footer className="text-center text-sm text-gray-500 pt-12 mt-12 border-t">
+                <footer className="text-center text-sm text-gray-500 pt-10 mt-12 border-t border-slate-200/60">
                     <p>
                         Built with Next.js, Drizzle ORM, and NeonDB •{" "}
                         <a
                             href="/api/projects"
-                            className="text-blue-600 hover:underline"
+                            className="text-indigo-600 hover:text-indigo-800 hover:underline font-medium"
                         >
                             Projects API
                         </a>
