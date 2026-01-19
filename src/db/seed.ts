@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
+import bcrypt from "bcryptjs";
 import * as schema from "./schema";
 
 async function seed() {
@@ -17,11 +18,26 @@ async function seed() {
   await db.delete(schema.workExperiences);
   await db.delete(schema.projects);
   await db.delete(schema.profiles);
+  await db.delete(schema.users);
+
+  // Create demo user
+  const hashedPassword = await bcrypt.hash("demo123", 10);
+  const [user] = await db
+    .insert(schema.users)
+    .values({
+      email: "rajanti.mehra@example.com",
+      password: hashedPassword,
+      name: "Rajanti Mehra",
+    })
+    .returning();
+
+  console.log(`✅ Created user: ${user.email} (password: demo123)`);
 
   // Insert profile for the candidate
   const [profile] = await db
     .insert(schema.profiles)
     .values({
+      userId: user.id,
       name: "Rajanti Mehra",
       email: "rajanti.mehra@example.com",
       summary:
