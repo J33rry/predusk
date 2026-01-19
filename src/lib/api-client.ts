@@ -1,3 +1,5 @@
+import { cookies } from "next/headers";
+
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 export interface ProfileLinks {
@@ -98,8 +100,12 @@ export interface SearchResults {
 
 export async function fetchProfile(): Promise<Profile | null> {
   try {
+    const cookieStore = await cookies();
     const res = await fetch(`${BASE_URL}/api/profile`, {
       cache: "no-store",
+      headers: {
+        Cookie: cookieStore.toString(),
+      },
     });
     if (!res.ok) return null;
     return res.json();
@@ -111,11 +117,15 @@ export async function fetchProfile(): Promise<Profile | null> {
 
 export async function fetchProjects(skill?: string): Promise<{ projects: Project[]; count: number }> {
   try {
+    const cookieStore = await cookies();
     const url = new URL(`${BASE_URL}/api/projects`);
     if (skill) url.searchParams.set("skill", skill);
     
     const res = await fetch(url.toString(), {
       cache: "no-store",
+      headers: {
+        Cookie: cookieStore.toString(),
+      },
     });
     if (!res.ok) return { projects: [], count: 0 };
     return res.json();
@@ -127,8 +137,12 @@ export async function fetchProjects(skill?: string): Promise<{ projects: Project
 
 export async function fetchTopSkills(): Promise<{ topSkills: TopSkill[]; totalUniqueSkills: number }> {
   try {
+    const cookieStore = await cookies();
     const res = await fetch(`${BASE_URL}/api/skills/top`, {
       cache: "no-store",
+      headers: {
+        Cookie: cookieStore.toString(),
+      },
     });
     if (!res.ok) return { topSkills: [], totalUniqueSkills: 0 };
     return res.json();
@@ -140,8 +154,12 @@ export async function fetchTopSkills(): Promise<{ topSkills: TopSkill[]; totalUn
 
 export async function searchContent(query: string): Promise<SearchResults | null> {
   try {
+    const cookieStore = await cookies();
     const res = await fetch(`${BASE_URL}/api/search?q=${encodeURIComponent(query)}`, {
       cache: "no-store",
+      headers: {
+        Cookie: cookieStore.toString(),
+      },
     });
     if (!res.ok) return null;
     return res.json();
