@@ -4,10 +4,8 @@ A modern, production-ready directory application that stores candidate profiles 
 
 ## 🎯 Live Demo
 
-- **Live URL**: [https://your-app.vercel.app](https://your-app.vercel.app) _(Update after deployment)_
-- **GitHub Repository**: [https://github.com/your-username/assignment](https://github.com/your-username/assignment) _(Update with actual repo)_
-
----
+- **Live URL**: [https://predusk-seven.vercel.app/](https://predusk-seven.vercel.app/)
+- **GitHub Repository**: [https://github.com/J33rry/predusk](https://github.com/J33rry/predusk)
 
 ## 📋 Project Overview
 
