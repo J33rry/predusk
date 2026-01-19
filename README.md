@@ -365,3 +365,4 @@ curl "https://your-app.vercel.app/api/search?q=typescript"
 ## 📜 License
 
 MIT
+
