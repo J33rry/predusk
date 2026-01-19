@@ -4,8 +4,8 @@ A minimal, production-ready application that stores a candidate profile in Postg
 
 ## 🎯 Live Demo
 
-- **Live URL**: [https://your-app.vercel.app](https://your-app.vercel.app) *(Update after deployment)*
-- **GitHub Repository**: [https://github.com/your-username/assignment](https://github.com/your-username/assignment) *(Update with actual repo)*
+- **Live URL**: [https://your-app.vercel.app](https://your-app.vercel.app) _(Update after deployment)_
+- **GitHub Repository**: [https://github.com/your-username/assignment](https://github.com/your-username/assignment) _(Update with actual repo)_
 
 ---
 
@@ -53,15 +53,15 @@ This project demonstrates a full-stack application with:
 
 ## 🧱 Tech Stack
 
-| Technology    | Purpose                        | Justification                                                                 |
-|---------------|--------------------------------|-------------------------------------------------------------------------------|
-| **Next.js 16**| Full-stack framework           | App Router provides unified API routes and SSR pages with excellent DX       |
-| **TypeScript**| Type safety                    | Catches errors at compile time, improves maintainability                      |
-| **Drizzle ORM**| Database toolkit              | Type-safe, lightweight, SQL-like syntax, excellent migration support          |
-| **NeonDB**    | Serverless PostgreSQL          | Instant provisioning, auto-scaling, perfect for serverless deployments        |
-| **Zod**       | Input validation               | Runtime type validation with TypeScript inference                             |
-| **Tailwind**  | Styling                        | Utility-first CSS, minimal bundle size, rapid development                     |
-| **Vercel**    | Hosting                        | Native Next.js support, edge functions, automatic deployments                 |
+| Technology      | Purpose               | Justification                                                          |
+| --------------- | --------------------- | ---------------------------------------------------------------------- |
+| **Next.js 16**  | Full-stack framework  | App Router provides unified API routes and SSR pages with excellent DX |
+| **TypeScript**  | Type safety           | Catches errors at compile time, improves maintainability               |
+| **Drizzle ORM** | Database toolkit      | Type-safe, lightweight, SQL-like syntax, excellent migration support   |
+| **NeonDB**      | Serverless PostgreSQL | Instant provisioning, auto-scaling, perfect for serverless deployments |
+| **Zod**         | Input validation      | Runtime type validation with TypeScript inference                      |
+| **Tailwind**    | Styling               | Utility-first CSS, minimal bundle size, rapid development              |
+| **Vercel**      | Hosting               | Native Next.js support, edge functions, automatic deployments          |
 
 ---
 
@@ -70,44 +70,47 @@ This project demonstrates a full-stack application with:
 ### Tables
 
 #### `profiles`
-| Column       | Type         | Description                          |
-|--------------|--------------|--------------------------------------|
-| id           | UUID (PK)    | Auto-generated unique identifier     |
-| name         | TEXT         | Full name                            |
-| email        | TEXT (unique)| Email address                        |
-| summary      | TEXT         | Professional summary                 |
-| education    | JSONB        | Array of education entries           |
-| skills       | TEXT[]       | Array of skill strings               |
-| links        | JSONB        | Object with github, linkedin, etc.   |
-| created_at   | TIMESTAMPTZ  | Creation timestamp                   |
-| updated_at   | TIMESTAMPTZ  | Last update timestamp                |
+
+| Column     | Type          | Description                        |
+| ---------- | ------------- | ---------------------------------- |
+| id         | UUID (PK)     | Auto-generated unique identifier   |
+| name       | TEXT          | Full name                          |
+| email      | TEXT (unique) | Email address                      |
+| summary    | TEXT          | Professional summary               |
+| education  | JSONB         | Array of education entries         |
+| skills     | TEXT[]        | Array of skill strings             |
+| links      | JSONB         | Object with github, linkedin, etc. |
+| created_at | TIMESTAMPTZ   | Creation timestamp                 |
+| updated_at | TIMESTAMPTZ   | Last update timestamp              |
 
 #### `projects`
-| Column       | Type         | Description                          |
-|--------------|--------------|--------------------------------------|
-| id           | UUID (PK)    | Auto-generated unique identifier     |
-| profile_id   | UUID (FK)    | References profiles.id               |
-| title        | TEXT         | Project title                        |
-| description  | TEXT         | Project description                  |
-| links        | JSONB        | Object with repo, demo, docs URLs    |
-| skills       | TEXT[]       | Technologies used                    |
-| created_at   | TIMESTAMPTZ  | Creation timestamp                   |
-| updated_at   | TIMESTAMPTZ  | Last update timestamp                |
+
+| Column      | Type        | Description                       |
+| ----------- | ----------- | --------------------------------- |
+| id          | UUID (PK)   | Auto-generated unique identifier  |
+| profile_id  | UUID (FK)   | References profiles.id            |
+| title       | TEXT        | Project title                     |
+| description | TEXT        | Project description               |
+| links       | JSONB       | Object with repo, demo, docs URLs |
+| skills      | TEXT[]      | Technologies used                 |
+| created_at  | TIMESTAMPTZ | Creation timestamp                |
+| updated_at  | TIMESTAMPTZ | Last update timestamp             |
 
 #### `work_experiences`
-| Column       | Type         | Description                          |
-|--------------|--------------|--------------------------------------|
-| id           | UUID (PK)    | Auto-generated unique identifier     |
-| profile_id   | UUID (FK)    | References profiles.id               |
-| role         | TEXT         | Job title                            |
-| company      | TEXT         | Company name                         |
-| location     | TEXT         | Work location                        |
-| start_date   | TEXT         | Start date (YYYY-MM)                 |
-| end_date     | TEXT         | End date (null if current)           |
-| summary      | TEXT         | Role description                     |
-| highlights   | JSONB        | Array of bullet points               |
-| created_at   | TIMESTAMPTZ  | Creation timestamp                   |
-| updated_at   | TIMESTAMPTZ  | Last update timestamp                |
+
+| Column     | Type        | Description                      |
+| ---------- | ----------- | -------------------------------- |
+| id         | UUID (PK)   | Auto-generated unique identifier |
+| profile_id | UUID (FK)   | References profiles.id           |
+| role       | TEXT        | Job title                        |
+| company    | TEXT        | Company name                     |
+| location   | TEXT        | Work location                    |
+| start_date | TEXT        | Start date (YYYY-MM)             |
+| end_date   | TEXT        | End date (null if current)       |
+| summary    | TEXT        | Role description                 |
+| highlights | JSONB       | Array of bullet points           |
+| created_at | TIMESTAMPTZ | Creation timestamp               |
+| updated_at | TIMESTAMPTZ | Last update timestamp            |
 
 ### JSONB Field Structures
 
@@ -210,9 +213,9 @@ Visit [http://localhost:3000](http://localhost:3000)
 1. Push code to GitHub
 2. Import project in [Vercel Dashboard](https://vercel.com/new)
 3. Add environment variables:
-   - `DATABASE_URL` - Your NeonDB production connection string
-   - `BASIC_AUTH_TOKEN` - Secure token for write operations
-   - `NEXT_PUBLIC_SITE_URL` - Your production URL (e.g., https://your-app.vercel.app)
+    - `DATABASE_URL` - Your NeonDB production connection string
+    - `BASIC_AUTH_TOKEN` - Secure token for write operations
+    - `NEXT_PUBLIC_SITE_URL` - Your production URL (e.g., https://your-app.vercel.app)
 4. Deploy
 
 ### Post-Deployment
@@ -235,11 +238,12 @@ curl https://your-app.vercel.app/api/health
 ```
 
 Response:
+
 ```json
 {
-  "status": "ok",
-  "timestamp": "2026-01-19T10:00:00.000Z",
-  "version": "1.0.0"
+    "status": "ok",
+    "timestamp": "2026-01-19T10:00:00.000Z",
+    "version": "1.0.0"
 }
 ```
 
@@ -358,11 +362,10 @@ curl "https://your-app.vercel.app/api/search?q=typescript"
 
 ## 📄 Resume
 
-[Link to Resume (PDF)](https://your-resume-link.com) *(Update with actual link)*
+[Link to Resume (PDF)](https://your-resume-link.com) _(Update with actual link)_
 
 ---
 
 ## 📜 License
 
 MIT
-

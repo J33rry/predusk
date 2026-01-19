@@ -1,11 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import type { Profile } from "@/lib/api-client";
-
-interface ProfileActionsProps {
-    profile: Profile | null;
-}
 
 interface ProfileFormData {
     name: string;
@@ -17,46 +12,32 @@ interface ProfileFormData {
     portfolio: string;
 }
 
-export default function ProfileActions({ profile }: ProfileActionsProps) {
+export default function AddProfileButton() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
-    const [mode, setMode] = useState<"create" | "update">("create");
 
     const [formData, setFormData] = useState<ProfileFormData>({
-        name: profile?.name || "",
-        email: profile?.email || "",
-        summary: profile?.summary || "",
-        skills: profile?.skills?.join(", ") || "",
-        github: profile?.links?.github || "",
-        linkedin: profile?.links?.linkedin || "",
-        portfolio: profile?.links?.portfolio || "",
+        name: "",
+        email: "",
+        summary: "",
+        skills: "",
+        github: "",
+        linkedin: "",
+        portfolio: "",
     });
 
-    const openModal = (actionMode: "create" | "update") => {
-        setMode(actionMode);
-        if (actionMode === "update" && profile) {
-            setFormData({
-                name: profile.name,
-                email: profile.email,
-                summary: profile.summary || "",
-                skills: profile.skills?.join(", ") || "",
-                github: profile.links?.github || "",
-                linkedin: profile.links?.linkedin || "",
-                portfolio: profile.links?.portfolio || "",
-            });
-        } else {
-            setFormData({
-                name: "",
-                email: "",
-                summary: "",
-                skills: "",
-                github: "",
-                linkedin: "",
-                portfolio: "",
-            });
-        }
+    const openModal = () => {
+        setFormData({
+            name: "",
+            email: "",
+            summary: "",
+            skills: "",
+            github: "",
+            linkedin: "",
+            portfolio: "",
+        });
         setError(null);
         setSuccess(null);
         setIsModalOpen(true);
@@ -90,9 +71,8 @@ export default function ProfileActions({ profile }: ProfileActionsProps) {
                 },
             };
 
-            const method = mode === "create" ? "POST" : "PUT";
             const res = await fetch("/api/profile", {
-                method,
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -102,14 +82,10 @@ export default function ProfileActions({ profile }: ProfileActionsProps) {
             const data = await res.json();
 
             if (!res.ok) {
-                throw new Error(data.error || `Failed to ${mode} profile`);
+                throw new Error(data.error || "Failed to create profile");
             }
 
-            setSuccess(
-                mode === "create"
-                    ? "Profile created successfully!"
-                    : "Profile updated successfully!",
-            );
+            setSuccess("Profile created successfully!");
 
             // Refresh the page after a short delay to show the updated data
             setTimeout(() => {
@@ -131,25 +107,13 @@ export default function ProfileActions({ profile }: ProfileActionsProps) {
 
     return (
         <>
-            {/* Action Buttons */}
-            <div className="flex gap-3 mt-6">
-                {!profile && (
-                    <button
-                        onClick={() => openModal("create")}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
-                    >
-                        + Add Profile
-                    </button>
-                )}
-                {profile && (
-                    <button
-                        onClick={() => openModal("update")}
-                        className="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors"
-                    >
-                        ✏️ Edit Profile
-                    </button>
-                )}
-            </div>
+            {/* Add Profile Button */}
+            <button
+                onClick={openModal}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+            >
+                + Add Profile
+            </button>
 
             {/* Modal */}
             {isModalOpen && (
@@ -158,9 +122,7 @@ export default function ProfileActions({ profile }: ProfileActionsProps) {
                         {/* Modal Header */}
                         <div className="flex justify-between items-center p-6 border-b">
                             <h2 className="text-xl font-semibold">
-                                {mode === "create"
-                                    ? "Create Profile"
-                                    : "Update Profile"}
+                                Add New Profile
                             </h2>
                             <button
                                 onClick={closeModal}
@@ -227,7 +189,7 @@ export default function ProfileActions({ profile }: ProfileActionsProps) {
                                     onChange={handleChange}
                                     rows={3}
                                     className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
-                                    placeholder="A brief professional summary..."
+                                    placeholder="A brief description about yourself..."
                                 />
                             </div>
 
@@ -246,22 +208,23 @@ export default function ProfileActions({ profile }: ProfileActionsProps) {
                                     value={formData.skills}
                                     onChange={handleChange}
                                     className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                                    placeholder="TypeScript, React, Node.js"
+                                    placeholder="JavaScript, React, Node.js"
                                 />
                             </div>
 
                             {/* Links Section */}
-                            <div className="space-y-3">
-                                <p className="text-sm font-medium text-gray-700">
-                                    Links
-                                </p>
+                            <div className="border-t pt-4">
+                                <h3 className="text-sm font-medium text-gray-700 mb-3">
+                                    Social Links
+                                </h3>
 
-                                <div>
+                                {/* GitHub */}
+                                <div className="mb-3">
                                     <label
                                         htmlFor="github"
-                                        className="block text-xs text-gray-500 mb-1"
+                                        className="block text-sm text-gray-600 mb-1"
                                     >
-                                        GitHub URL
+                                        GitHub
                                     </label>
                                     <input
                                         type="url"
@@ -269,17 +232,18 @@ export default function ProfileActions({ profile }: ProfileActionsProps) {
                                         name="github"
                                         value={formData.github}
                                         onChange={handleChange}
-                                        className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm"
+                                        className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                                         placeholder="https://github.com/username"
                                     />
                                 </div>
 
-                                <div>
+                                {/* LinkedIn */}
+                                <div className="mb-3">
                                     <label
                                         htmlFor="linkedin"
-                                        className="block text-xs text-gray-500 mb-1"
+                                        className="block text-sm text-gray-600 mb-1"
                                     >
-                                        LinkedIn URL
+                                        LinkedIn
                                     </label>
                                     <input
                                         type="url"
@@ -287,17 +251,18 @@ export default function ProfileActions({ profile }: ProfileActionsProps) {
                                         name="linkedin"
                                         value={formData.linkedin}
                                         onChange={handleChange}
-                                        className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm"
+                                        className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                                         placeholder="https://linkedin.com/in/username"
                                     />
                                 </div>
 
+                                {/* Portfolio */}
                                 <div>
                                     <label
                                         htmlFor="portfolio"
-                                        className="block text-xs text-gray-500 mb-1"
+                                        className="block text-sm text-gray-600 mb-1"
                                     >
-                                        Portfolio URL
+                                        Portfolio
                                     </label>
                                     <input
                                         type="url"
@@ -305,18 +270,20 @@ export default function ProfileActions({ profile }: ProfileActionsProps) {
                                         name="portfolio"
                                         value={formData.portfolio}
                                         onChange={handleChange}
-                                        className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm"
-                                        placeholder="https://yoursite.com"
+                                        className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                                        placeholder="https://yourportfolio.com"
                                     />
                                 </div>
                             </div>
 
-                            {/* Error/Success Messages */}
+                            {/* Error Message */}
                             {error && (
                                 <div className="p-3 bg-red-50 text-red-700 rounded-lg text-sm">
                                     {error}
                                 </div>
                             )}
+
+                            {/* Success Message */}
                             {success && (
                                 <div className="p-3 bg-green-50 text-green-700 rounded-lg text-sm">
                                     {success}
@@ -328,7 +295,7 @@ export default function ProfileActions({ profile }: ProfileActionsProps) {
                                 <button
                                     type="button"
                                     onClick={closeModal}
-                                    className="flex-1 px-4 py-2 border rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors"
                                 >
                                     Cancel
                                 </button>
@@ -338,10 +305,8 @@ export default function ProfileActions({ profile }: ProfileActionsProps) {
                                     className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                 >
                                     {isLoading
-                                        ? "Saving..."
-                                        : mode === "create"
-                                          ? "Create Profile"
-                                          : "Update Profile"}
+                                        ? "Creating..."
+                                        : "Create Profile"}
                                 </button>
                             </div>
                         </form>

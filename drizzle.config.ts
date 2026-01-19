@@ -2,16 +2,16 @@ import "dotenv/config";
 import { defineConfig } from "drizzle-kit";
 
 if (!process.env.DATABASE_URL) {
-  console.warn("DATABASE_URL is not set. Drizzle CLI commands may fail.");
+    console.warn("DATABASE_URL is not set. Drizzle CLI commands may fail.");
 }
 
 export default defineConfig({
-  schema: "./src/db/schema.ts",
-  out: "./drizzle",
-  dialect: "postgresql",
-  dbCredentials: {
-    url: process.env.DATABASE_URL ?? "",
-  },
-  verbose: true,
-  strict: true,
+    schema: "./src/db/schema.ts",
+    out: "./drizzle",
+    dialect: "postgresql",
+    dbCredentials: {
+        url: process.env.DATABASE_URL ?? "",
+    },
+    verbose: true,
+    strict: true,
 });
